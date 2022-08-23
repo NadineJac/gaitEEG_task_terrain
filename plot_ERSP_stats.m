@@ -13,23 +13,26 @@ function plot_ERSP_stats(sii, PATH, cfg)
 %
 % Nadine Jacobsen, University of Oldenburg, May 2022
 % v1.0 last changed May-12-2022
+% v1.1 last changed Aug-23-2022: deleted ANOVA, included dep T-test for
+% interaction
 
 % directories
 PATHIN = PATH.sPCAsensor;
 PATHOUT = PATH.plotConds;
 
 % stats
-file_in = {'2x2rmANOVA_Cz.mat',...
-    'depT_ME_surface.mat',...
-    'depT_ME_task.mat'};
+file_in = {'depT_ME_surface.mat',...
+    'depT_ME_task.mat',...
+    'depT_interaction.mat'};
 
 % reports
-reportNames = {'2x2rmANOVA_Cz.png',...
-    'depT_ME_surface.png',...
-    'depT_ME_task.png'};
+reportNames = { 'depT_ME_surface.png',...
+    'depT_ME_task.png'...
+    'depT_interaction.png'};
 
 %% ROI
 chanIdx = cfg.COI; % channel to test: Cz
+freqs = cfg.f_axis(cfg.FOI);
 % look into all time points;
 
 % plot params
@@ -97,8 +100,6 @@ plot_gaitERSP(mean(GPM{ci},4), chanIdx, freqs, clim, colorbr, cfg);axis square
 %terrain
 p=11; subplot(6,c,[p,p+1,p+c,p+c+1]); hold on
 plot_gaitERSP(mean(contrasts.ME_surface,4), chanIdx, freqs, clim, colorbr, cfg);axis square
-try l{1} = contour(cfg.t_axis, freqs, ANOVA.results.pinter{1}<.05,1,...
-    ':k','linewidth',1);end % ANOVA
 try l{2}= contour(cfg.t_axis, freqs, ME_surface.results.pinter{1}<.05,1,...
     'k','linewidth',.5);end %t test
 %title('even - uneven')
@@ -106,8 +107,6 @@ try l{2}= contour(cfg.t_axis, freqs, ME_surface.results.pinter{1}<.05,1,...
 % task
 p=26; subplot(6,c,[p,p+1,p+c,p+c+1]); hold on
 plot_gaitERSP(mean(contrasts.ME_task,4), chanIdx, freqs, clim, colorbr, cfg);axis square
-try contour(cfg.t_axis, freqs, ANOVA.results.pinter{2}<.05,1,...
-    ':k','linewidth',1); end % ANOVA
 try contour(cfg.t_axis, freqs, ME_task.results.pinter{2}<.05,1,...
     'k','linewidth',.5);end%t test
 %title('ST - DT')
@@ -115,8 +114,8 @@ try contour(cfg.t_axis, freqs, ME_task.results.pinter{2}<.05,1,...
 % interaction
 p=29; subplot(6,c,[p,p+1,p+c,p+c+1]); hold on
 plot_gaitERSP(mean(contrasts.ME_surface-contrasts.ME_task,4), chanIdx, freqs, clim, colorbr, cfg);axis square
-try contour(cfg.t_axis, freqs, ANOVA.results.pinter{3}<.05,1,...
-    'k','linewidth',1);end % ANOVA
+try l{2}= contour(cfg.t_axis, freqs, interaction.results.pinter{1}<.05,1,...
+    'k','linewidth',.5);end %t test
 %title([{'(even - uneven) -'};{'(ST - DT)'}])
 xlabel('Gait cycle (%)'); ylabel('Frequency (Hz)')
 

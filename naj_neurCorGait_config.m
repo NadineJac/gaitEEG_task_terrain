@@ -148,9 +148,9 @@ freqs = 6:2:40; % frequencies to test in Hz
 FOI = ismember(f_axis, freqs);% their indices
 COI = 24; % channel to test: Cz
 
-stats.ANOVA = load('cfg_ANOVA.mat');
 stats.depT_surface = load('cfg_depT_surface.mat');
 stats.depT_task = load('cfg_depT_task.mat');
+stats.depT_interaction = load('cfg_depT_interaction.mat');
 
 %% save
 save(file_out);
